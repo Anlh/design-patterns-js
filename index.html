@@ -27,7 +27,7 @@
         .cat-display-area {
             width: 70%;
             height: auto;
-            float:left;
+            float: left;
         }
     </style>
 </head>
@@ -37,7 +37,25 @@
     <ul class="cat-ul-list"></ul>
 </aside>
 <div class="cat-display-area">
-
+    <h2 id="cat-name-js"></h2>
+    <img id="cat-img-js" width="400px" src="">
+    <br>
+    <span id="cat-counter-js"></span> Meows!
+    <br>
+    <button id="admin-js"> Admin</button>
+    <div style="display:none;" id="admin-panel-js">
+        <form>
+            <label for="edit-name-js">Name:</label>
+            <input id="edit-name-js" type="text" value="">
+            <br>
+            <label for="edit-image-url-js">Image URL:</label>
+            <input id="edit-image-url-js" type="text" value="">
+            <br>
+            <label for="edit-num-clicks-js">Number of clicks</label>
+            <input id="edit-num-clicks-js" type="number" value="">
+            <button id="edit-cat-btn-js">Save changes</button>
+        </form>
+    </div>
 </div>
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
