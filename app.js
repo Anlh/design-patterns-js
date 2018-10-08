@@ -1,40 +1,93 @@
-const $catUlListEl = $('.cat-ul-list');
-const $catDisplayEl = $('.cat-display-area');
+$(function () {
 
-const cats = [
-    {name: 'Thomas', img: 'https://purr.objects-us-west-1.dream.io/i/PtRBa.jpg', clicksNum: 0},
-    {name: 'Jefferson', img: 'https://purr.objects-us-west-1.dream.io/i/s6LNd.jpg', clicksNum: 0},
-    {name: 'Donald Trump', img: 'https://purr.objects-us-west-1.dream.io/i/xrM9q.jpg', clicksNum: 0},
-    {name: 'Cristiano Ronaldo', img: 'https://purr.objects-us-west-1.dream.io/i/BaO8d.jpg', clicksNum: 0},
-    {name: 'Mia', img: 'https://purr.objects-us-west-1.dream.io/i/x6SRI.jpg', clicksNum: 0},
-];
+    /*
+    *
+    * MODEL
+    *
+    * */
+    const model = {
+        currentCat: null,
+        cats: [
+            {name: 'Thomas', img: 'https://purr.objects-us-west-1.dream.io/i/PtRBa.jpg', countClick: 0},
+            {name: 'Jefferson', img: 'https://purr.objects-us-west-1.dream.io/i/s6LNd.jpg', countClick: 0},
+            {name: 'Donald Trump', img: 'https://purr.objects-us-west-1.dream.io/i/xrM9q.jpg', countClick: 0},
+            {name: 'Cristiano Ronaldo', img: 'https://purr.objects-us-west-1.dream.io/i/BaO8d.jpg', countClick: 0},
+            {name: 'Mia', img: 'https://purr.objects-us-west-1.dream.io/i/x6SRI.jpg', countClick: 0},
+        ]
+    };
 
-cats.forEach((cat, index) => {
-    $('<li/>', {
-        text: cat.name,
-        "data-cat-id": `${index}`,
-    }).appendTo($catUlListEl);
-});
+    /*
+    *
+    * OCTOPUS
+    *
+    * */
+    const octopus = {
+        init() {
+            model.currentCat = model.cats[0];
+
+            // initialize views
+            catListView.init();
+            catView.init();
+        },
+        getAllCats() {
+            return model.cats;
+        },
+        setCurrentCat(cat) {
+            model.currentCat = cat;
+        },
+        getCurrentCat() {
+            return model.currentCat;
+        },
+        incrementCounter() {
+            model.currentCat.countClick++;
+            catView.render();
+        }
+    };
 
 
-$catUlListEl.on('click', 'li', event => {
-    const $currentCat = $(event.currentTarget);
-    const catId = $currentCat.data('catId');
-    const catObj = cats[catId];
+    /*
+    *
+    * VIEWS
+    *
+    * */
+    const catListView = {
+        init() {
+            this.$catUlListEl = $('.cat-ul-list');
 
-    $catDisplayEl.html(
-        `<h2>${catObj.name}</h2>
-        <img data-cat-id="${catId}" width="400px" src="${ catObj.img}"><br>
-        <span class="cat-counter">${catObj.clicksNum}</span> Meows!`
-    );
-});
+            this.render();
+        },
+        render() {
+            octopus.getAllCats().forEach(cat => {
+                $('<li/>', {
+                    text: cat.name
+                })
+                    .appendTo(this.$catUlListEl)
+                    .click(() => {
+                        octopus.setCurrentCat(cat);
+                        catView.render();
+                    });
+            });
+        }
+    };
 
-$catDisplayEl.on('click', 'img', (event) => {
-    const $currentCat = $(event.currentTarget);
-    const catId = $currentCat.data('catId');
-    const catObj = cats[catId];
+    const catView = {
+        init() {
+            this.$catDisplayEl = $('.cat-display-area');
 
-    catObj.clicksNum++;
+            this.$catDisplayEl.on('click', 'img', () => octopus.incrementCounter());
 
-    $catDisplayEl.find('.cat-counter').text(catObj.clicksNum);
+            this.render();
+        },
+        render() {
+            const {name, countClick, img} = octopus.getCurrentCat();
+            this.$catDisplayEl.html(
+                `<h2>${name}</h2>
+                <img width="400px" src="${img}"><br>
+                <span class="cat-counter">${countClick}</span> Meows!`
+            );
+        }
+    };
+
+
+    octopus.init();
 });
